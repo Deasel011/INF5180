@@ -1,0 +1,72 @@
+Classe Conférence:
+Cette classe représente le concept abstrait qu'est une conférence. 
+Attribut 
+Nom : Le nom complet de la conférence
+Acronyme : L'acronyme du nom de la conférence
+Fréquence : Le nombre de fois que la conférence se tient par année.
+
+Classe Venue:
+Cette classe représente une édition concrète d'une conférence qui se tien à un lieu précis. 
+Attribut
+Durée : Le nombre de jour de l'édition de cette conférence
+Date_début : La date du premier jour de la conférence
+Date_fin : La date du dernier jour de la conférence
+Adresse : Le numéro civique où se tien la conférence
+
+Classe AppelAContribution
+Cette classe représente les informations contenu dans l'appel à contribution
+Attribut
+Date_limite_première_soumission : La date limite pour la première soumission d'articles
+Date_limite_soumission_finale : La date limite pour la soumission de la version finale d'un articles
+
+Classe Track
+Cette classe représent un track 
+Attribut
+Nom : Le nom du track
+max_soumissions : Le nombre maximum de soumissions possible pour ce track
+min_soumissions : Le nombre minimum de soumissions possible pour ce track
+
+Classe Chercheur
+Cette classe représentes un chercheur impliqué dans une conférence
+Attribut
+Nom : Le nom du chercheur
+Prénom : le prénom du chercheur
+Role
+CoPrésident : le chercheur est membre des coprésident de l'édition d'une conférence
+CoPrésident : le chercheur est membre des coprésident d'un track
+Evaluateur : Le chercheur est un évaluateur pour un article
+Auteur : Le chercheur est un auteur
+
+Classe Sujet
+Cette classe représente un sujet d'un track
+Attribut
+Mot-clé : liste de mot clé relié à ce track
+
+Classe Evaluation
+Cette classe représente l'évaluation d'un article par un chercher évaluateur
+Attribut
+Correction : Les corrections suggérées par l'évaluateur pour un article
+Amélioration : les améliorations suggérées par l'évaluateur pour un article
+note_recherche : ???????????????????????????
+note_texte : ???????????????????????????????
+
+Classe Décision
+Cette classe représente la décision des coprésident d'un track envers un article
+Attribut
+Acceptation : Est-ce que l'acticle est accepté ou non
+
+Classe Article
+Cette classe représente un article écrit par un ou plusieurs chercheurs
+Attibut
+Titre : le titre de l'article
+résumé : le résumé de l'article
+corps : le corps de l'article
+
+Classe soumission
+Cette classe représente un article soumis à un track d'une conférence
+Attribut
+no_référence : un numéro unique qui identifie chaque soumission
+version : idenfie s'il s'agit d'une première version ou une version finale
+nom_track : Le nom du track visé par la soumission
+motclefs : les mot clé lié au sujet de l'article
+
