@@ -1,4 +1,4 @@
--- noinspection SqlDialectInspectionForFile
+ -- noinspection SqlDialectInspectionForFile
 
 -- noinspection SqlNoDataSourceInspectionForFile
 
@@ -118,97 +118,6 @@ CREATE TABLE AuteurASoumission
 	idChercheur NUMBER NOT NULL,
 	idSoumission NUMBER NOT NULL,
 	CONSTRAINT AuteurASoumission_pk PRIMARY KEY (idChercheur, idSoumission),
-	CONSTRAINT soumissionChercheur_fk FOREIGN KEY (idChercheur)
-		REFERENCES Chercheur(idChercheur),
-	CONSTRAINT soumission_fk FOREIGN KEY (idSoumission)
-		REFERENCES Soumission(noSoumission)
+	CONSTRAINT soumissionChercheur_fk FOREIGN KEY (idChercheur) REFERENCES Chercheur(idChercheur),
+	CONSTRAINT soumission_fk FOREIGN KEY (idSoumission) REFERENCES Soumission(noSoumission)
 );
-
-create or replace trigger MaxCoPresidentComite
-after insert or update on CoPresident
-for each row
-DECLARE
-compte number;
-BEGIN
-  select count(idChercheur) into compte from CoPresident where idComiteRelecture = :new.idComiteRelecture;
-
-  if compte > 2 THEN
-    RAISE_APPLICATION_ERROR(-20001,'Maximum de Deux co-presidents par track');
-  end if;
-end;
-/
-
-
-CREATE OR REPLACE TRIGGER CheckNbEvaluation
-	BEFORE INSERT OR UPDATE ON Evaluation
-		FOR EACH ROW
-
-	DECLARE
-	t_count NUMBER;
-	t_nbEval_exception EXCEPTION;
-	PRAGMA EXCEPTION_INIT(t_nbEval_exception, -20002)
-
-	BEGIN
-		SELECT COUNT(noSoumission) INTO t_count	 
-		FROM Evaluation
-		Where idChercheur = :new.idChercheur
-
-		IF( t_count > 3 ) THEN
-			RAISE_APPLICATION_ERROR( -20002, "Pas plus de trois evaluation par membre")
-		END IF;
-
-		EXCEPTION
-			WHEN t_nbEval_exception
-			THEN dbms_output.put_line( sqlerrm );
-	END;
-
-
-CREATE OR REPLACE TRIGGER CheckConflitCoPresAuteur
-	BEFORE INSERT OR UPDATE 
-	ON (CoPresident cp JOIN AuteurASoumission aas
-		ON cp.idChercheur = aas.idChercheur) 
-		FOR EACH ROW
-
-	DECLARE
-	t_count NUMBER;
-	t_conflit_coPres_soumission_exception EXCEPTION;
-	PRAGMA EXCEPTION_INIT(t_conflit_coPres_soumission_exception, -20003)
-
-	BEGIN
-		SELECT COUNT(idTrack) INTO t_count	 
-		FROM CoPresident cp
-			INNER JOIN Comiterelecture cr
-				ON cp.idComiteRelecture = cr.idComiteRelecture
-			INNER JOIN AuteurASoumission aas
-				ON cp.idChercheur = aas.idChercheur
-			INNER JOIN Soumission s
-				ON aas.idSoumission = s.noSoumission 
-		Where idTrack = :new.idTrack
-
-		IF( t_count > 0 ) THEN
-			RAISE_APPLICATION_ERROR( -20003, "Un co-president ne peut etre auteur d'une soumission dans son propre track")
-		END IF;
-
-		EXCEPTION
-			WHEN t_conflit_coPres_soumission_exception
-			THEN dbms_output.put_line( sqlerrm );
-	END;
-
-
--- Exercices Demo
-
-create procedure AuteurActif (titreConference as varchar(50)
-as
-avgEditions int;
-begin
-select count(*)/2 into avgEditions from Edition e
-where e.titre = titreConference
-
-select idChercheur from Conference c
-join Edition e on c.titre = e.titre
-join Track t on t.idEdition = e.idEdition
-join Soumission s on s.idTrack = t.idTrack
-join AuteurASoumission a.idSoumission = s.noSoumission
-group by idChercheur, e.idEdition
-where count(insoumission) > avgEditions
-end;
