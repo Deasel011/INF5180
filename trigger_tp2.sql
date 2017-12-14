@@ -153,3 +153,13 @@ CREATE OR REPLACE TRIGGER PasDeConflitDinteretAAS
 		END LOOP;
 	END;
 /
+
+if exists (
+select 1 from Evaluation eval
+left join Soumission soum on eval.noSoumission = soum.nosoumission
+left join AuteurASoumission aas on soum.noSoumission = aas.idSoumission
+left join AuteurASoumission aas2 on aas2.idChercheur = aas.idChercheur
+left join AuteurASoumission aas3 on aas2.idSoumission = aas3.idSoumission
+where eval.idChercheur = aas.idChercheur or eval.idChercheur = aas3.idChercheur
+)
+raise_application_error(-10000,'Conflit dindeter...')
