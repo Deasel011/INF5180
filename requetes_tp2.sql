@@ -16,12 +16,11 @@ where cr.idTrack = searchValue
 select idTrack, count(noSoumission)
 from Track t
 	inner join Soumission s on t.idTrack = s.idTrack
-where t.idEdition = serachValue
+where t.idEdition = searchValue
+group by idTrack
 
-/*Affichage nombre moyen d'article par membre d'un comite*/
-create view nbSoumisisonView
-	select count(noSoumission) as nbSoumisisons
-	from Evalutation
-	where idChercheur = searchValue;
-
-select avg(nbSoumisisons) from nbSoumisisonView
+/*Affichage du nombre moyen d'article affecte a un membre pour un comite donne*/
+select idChercheur, count(noSoumission) / count(idChercheur)
+from Evaluation
+where idComiteRelecture = searchValue
+group by idChercheur

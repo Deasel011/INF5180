@@ -82,7 +82,7 @@ CREATE OR REPLACE TRIGGER CheckConflitAuteurCoPres
 		FROM ComiteRelecture cr
 			INNER JOIN CoPresident cp
 			ON cr.idComiteRelecture = cp.idComiteRelecture
-		WHERE idChercheur = :new.idChercheur;
+		WHERE idChercheur = :new.idChercheur and cp.idTrack = t_idTrackSoumission;
 		
 		IF( t_count > 0 ) THEN
 			RAISE_APPLICATION_ERROR( -20003, 'Un co-president ne peut etre auteur d une soumission dans son propre track');
@@ -107,22 +107,21 @@ CREATE OR REPLACE TRIGGER PasDeConflitDinteret
 	FOR EACH ROW
 
 	DECLARE
-	t_soumission INTEGER;
-	t_coAuteur INTEGER;
+	t_count INTEGER;
 
 	BEGIN
-		FOR row IN (SELECT idSoumission FROM AuteurASoumission aas where aa.idcherheur = :new.idChercheur) LOOP
-			SELECT COUNT(idChercheur) INTO t_coAuteur
-			FROM AuteurASoumission aas
-				INNER JOIN Soumission s ON s.noSoumission = aas.idSoumission
-				INNER JOIN Evaluation e ON s.noSoumission = e.noSoumission
-			WHERE idSoumission = row.idSoumission;
-
-			IF( t_coAuteur > 0 ) THEN
-				RAISE_APPLICATION_ERROR( -20004, 'Un evaluateur ne peut evaluer la soumission d un co-auteur');
-			END IF;
-
-		END LOOP;
+		for i in (select idSoumission from AuteurASoumission aas where aas.idChercheur = :new.idChercheur) loop
+			for j in (select idChercheur from AuteurASoumission aas where aas.idSoumission = i.idSoumission) loop
+				select count(idSoumission) into t_count 
+				from AuteurASoumission aas 
+				where aas.idChercheur = j.idChercheur 
+				and aas.idSoumission in (select idSoumission from Evaluation e where e.idChercheur = :new.idChercheur);
+				
+				if t_count > 0 then
+					RAISE_APPLICATION_ERROR( -20010, 'Un evaluateur ne peut evaluer la soumission d un co-auteur');
+				end if;
+			end loop;
+		end loop;
 	END;
 /
 
@@ -130,26 +129,21 @@ CREATE OR REPLACE TRIGGER PasDeConflitDinteret
 CREATE OR REPLACE TRIGGER PasDeConflitDinteretAAS
 	BEFORE INSERT OR UPDATE ON AuteurASoumission
 	FOR EACH ROW
-
+	
 	DECLARE
-	t_soumission INTEGER;
-	t_coAuteur INTEGER;
+	t_count integer;
 
 	BEGIN
-		FOR row IN 
-			(SELECT * 
-			 FROM AuteurASoumission aas
-			 WHERE aas.idChercheur = :new.idChercheur) LOOP
-			SELECT COUNT(idChercheur) INTO t_coAuteur
-			FROM AuteurASoumission aas
-				INNER JOIN Soumission s ON s.noSoumission = aas.idSoumission
-				INNER JOIN Evaluation e ON s.noSoumission = e.noSoumission
-			WHERE idSoumission = row.idSoumission;
+		for i in (select idSoumission from AuteurASoumission where idChercheur = :new.idChercheur) loop			
+			for j in (select idChercheur from AuteurASoumission aas where aas.idSoumission = i.idSoumission) loop
+				select count(idChercheur) into t_count from Evaluation e where e.idSoumission = :new.idSoumission
+				and e.idChercheur = j.idChercheur;
 
-			IF( t_coAuteur > 0 ) THEN
-				RAISE_APPLICATION_ERROR( -20004, 'Un evaluateur ne peut evaluer la soumission d un co-auteur');
-			END IF;
-
-		END LOOP;
+				if t_count > 0 then
+					RAISE_APPLICATION_ERROR( -20010, 'Un evaluateur ne peut evaluer la soumission d un co-auteur');
+				end if;
+			end loop;
+		end loop;
 	END;
+
 /

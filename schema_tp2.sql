@@ -67,10 +67,8 @@ CREATE TABLE CoPresident
 
 CREATE TABLE Sujet
 (
-  idSujet int not null,
 	motClef VARCHAR(30) NOT NULL,
-	CONSTRAINT sujet_pk PRIMARY KEY (idSujet),
-	CONSTRAINT sujet_bk UNIQUE (motClef)
+	CONSTRAINT sujet_pk PRIMARY KEY (motClef)
 );
 
 CREATE TABLE TrackASujet
