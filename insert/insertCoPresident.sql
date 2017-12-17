@@ -1,0 +1,18 @@
+insert all
+	into COPRESIDENT (idComite,idChercheur) values(11,1)
+	into COPRESIDENT (idComite,idChercheur) values(11,4)
+	into COPRESIDENT (idComite,idChercheur) values(12,2)
+	into COPRESIDENT (idComite,idChercheur) values(12,3)
+	into COPRESIDENT (idComite,idChercheur) values(13,3)
+	into COPRESIDENT (idComite,idChercheur) values(13,2)
+	into COPRESIDENT (idComite,idChercheur) values(14,8)
+	into COPRESIDENT (idComite,idChercheur) values(14,4)
+	into COPRESIDENT (idComite,idChercheur) values(15,16)
+	into COPRESIDENT (idComite,idChercheur) values(15,10)
+	into COPRESIDENT (idComite,idChercheur) values(16,6)
+	into COPRESIDENT (idComite,idChercheur) values(16,8)
+	into COPRESIDENT (idComite,idChercheur) values(17,7)
+	into COPRESIDENT (idComite,idChercheur) values(17,10)
+	into COPRESIDENT (idComite,idChercheur) values(18,8)
+	into COPRESIDENT (idComite,idChercheur) values(18,9)
+select * from dual;

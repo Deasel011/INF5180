@@ -1,0 +1,18 @@
+insert all
+	into SUJET (idSujet,motClef) values(21,'homéopathie')
+	into SUJET (idSujet,motClef) values(22,'systèmique')
+	into SUJET (idSujet,motClef) values(23,'épidémiologie')
+	into SUJET (idSujet,motClef) values(24,'primaire')
+	into SUJET (idSujet,motClef) values(25,'didactique')
+	into SUJET (idSujet,motClef) values(26,'psychanalyse')
+	into SUJET (idSujet,motClef) values(27,'quantique')
+	into SUJET (idSujet,motClef) values(28,'parallèle')
+	into SUJET (idSujet,motClef) values(29,'efficacité')
+	into SUJET (idSujet,motClef) values(30,'hypergraphs')
+	into SUJET (idSujet,motClef) values(31,'Big')
+	into SUJET (idSujet,motClef) values(32,'heterogeneous')
+	into SUJET (idSujet,motClef) values(33,'neurodecision trees')
+	into SUJET (idSujet,motClef) values(34,'neural')
+	into SUJET (idSujet,motClef) values(35,'recurrent')
+	into SUJET (idSujet,motClef) values(36,'convolution')
+select * from dual;

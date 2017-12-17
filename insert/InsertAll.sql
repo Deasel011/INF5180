@@ -1,0 +1,12 @@
+@@../schema_tp2
+@@insertConference
+@@insertEdition
+@@insertTrack
+@@insertChercheur
+@@insertComite
+@@insertSujet
+@@insertCoPresident
+@@insertMembre
+@@insertSoumission
+@@insertAAS
+@@insertEvaluation
