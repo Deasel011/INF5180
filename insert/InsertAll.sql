@@ -10,3 +10,5 @@
 @@insertSoumission
 @@insertAAS
 @@insertEvaluation
+@@trigger
+@@insertTest
