@@ -58,5 +58,8 @@ delete from EVALUATION where idChercheur = 26;
 insert into AUTEURASOUMISSION (idChercheur,idSoumission,rang) values(26,25,1);
 insert into AUTEURASOUMISSION (idChercheur,idSoumission,rang) values(27,25,1);
 insert into EVALUATION (idComite,idChercheur,noSoumission,note) values (19,26,26,0);
+delete from AUTEURASOUMISSION where idChercheur = 26;
+delete from AUTEURASOUMISSION where idChercheur = 27;
+delete from EVALUATION where idChercheur = 26;
 select * from dual;
 
