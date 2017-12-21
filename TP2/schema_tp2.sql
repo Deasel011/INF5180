@@ -43,9 +43,10 @@ CREATE TABLE Track
 (
 	idTrack INTEGER NOT NULL,
 	idEdition INTEGER NOT NULL,
-	titre VARCHAR(50) NOT NULL, 
+	titre VARCHAR(50) NOT NULL,
+	description VARCHAR(400) NULL,
 	nbPapiersMin INTEGER NOT NULL,
-	nbPapiersMax INTERGER NOT NULL,
+	nbPapiersMax INTEGER NOT NULL,
 	CONSTRAINT track_id PRIMARY KEY (idTrack),
 	CONSTRAINT trackEdition_fk FOREIGN KEY (idEdition) REFERENCES Edition(idEdition),
 	CONSTRAINT nbPapiers_check CHECK (nbPapiersMin <= nbPapiersMax)
@@ -80,6 +81,7 @@ CREATE TABLE CoPresident
 
 CREATE TABLE Sujet
 (
+  idSujet number not null,
 	motClef VARCHAR(30) NOT NULL,
 	CONSTRAINT sujet_pk PRIMARY KEY (idSujet)
 );
@@ -87,10 +89,10 @@ CREATE TABLE Sujet
 CREATE TABLE TrackASujet
 (
 	idTrack NUMBER NOT NULL,
-	motClef VARCHAR(30) NOT NULL,
-	CONSTRAINT TrackASujet_pk PRIMARY KEY (idTrack, motClef),
+	idSujet NUMBER NOT NULL,
+	CONSTRAINT TrackASujet_pk PRIMARY KEY (idTrack, idSujet),
 	CONSTRAINT TrackASujetTrack_fk FOREIGN KEY (idTrack) REFERENCES Track(idTrack),
-	CONSTRAINT TrackASujetSujet_fk FOREIGN KEY (motClef) REFERENCES Sujet(motClef)
+	CONSTRAINT TrackASujetSujet_fk FOREIGN KEY (idSujet) REFERENCES Sujet(idSujet)
 );
 
 CREATE TABLE Membre
@@ -107,7 +109,7 @@ CREATE TABLE Soumission
 	noSoumission NUMBER NOT NULL,
 	titre VARCHAR(150) NOT NULL,
 	resume VARCHAR(1500) NOT NULL,
-	corps VARCHAR(8000) NOT NULL,
+	corps VARCHAR(4000) NOT NULL,
 	idTrack NUMBER NOT NULL,
 	CONSTRAINT soumission_pk PRIMARY KEY (noSoumission),
 	CONSTRAINT soumissionTrack_fk FOREIGN KEY (idTrack) REFERENCES Track(idTrack)
@@ -118,8 +120,8 @@ CREATE TABLE Evaluation
 	idComiteRelecture NUMBER NOT NULL,
 	idChercheur NUMBER NOT NULL,
 	noSoumission NUMBER NOT NULL,
-	note  NUMBER NOT NULL,
-	CONSTRAINT evalution_pk PRIMARY KEY (idChercheur, noSoumission, idComite),
+	note  NUMBER NULL,
+	CONSTRAINT evalution_pk PRIMARY KEY (idChercheur, noSoumission, idComiteRelecture),
 	CONSTRAINT evalChercheur_fk FOREIGN KEY (idChercheur) REFERENCES Chercheur(idChercheur),
 	CONSTRAINT evalSoumission_fk FOREIGN KEY (noSoumission) REFERENCES Soumission(noSoumission),
 	CONSTRAINT evalComiteRelecture_fk FOREIGN KEY (idComiteRelecture) REFERENCES ComiteRelecture(idComiteRelecture)
