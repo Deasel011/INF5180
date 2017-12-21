@@ -44,44 +44,42 @@ CREATE TABLE Track
 	idTrack INTEGER NOT NULL,
 	idEdition INTEGER NOT NULL,
 	titre VARCHAR(50) NOT NULL, 
-	nbMinPapiers NUMBER NOT NULL,
-	nbMaxPapiers NUMBER NOT NULL,
-	description VARCHAR (100) NOT NULL,
+	nbPapiersMin INTEGER NOT NULL,
+	nbPapiersMax INTERGER NOT NULL,
 	CONSTRAINT track_id PRIMARY KEY (idTrack),
 	CONSTRAINT trackEdition_fk FOREIGN KEY (idEdition) REFERENCES Edition(idEdition),
-	CONSTRAINT nbPapiers_check CHECK (nbMinPapiers <= nbMaxPapiers)
+	CONSTRAINT nbPapiers_check CHECK (nbPapiersMin <= nbPapiersMax)
 );
 
 CREATE TABLE Chercheur
 (
 	idChercheur NUMBER NOT NULL,
-	prenom VARCHAR(20) NOT NULL,
 	nom VARCHAR(20) NOT NULL,
+	prenom VARCHAR(20) NOT NULL,
 	adresse VARCHAR(50) NOT NULL,
 	CONSTRAINT chercheur_pk PRIMARY KEY (idChercheur)
 );
 
 CREATE TABLE ComiteRelecture
 (
-	idComite NUMBER NOT NULL,
+	idComiteRelecture NUMBER NOT NULL,
 	idTrack NUMBER NOT NULL,
 	CONSTRAINT idTrack_unique UNIQUE(idTrack),
-	CONSTRAINT comiteRelecture_pk PRIMARY KEY (idComite),
+	CONSTRAINT comiteRelecture_pk PRIMARY KEY (idComiteRelecture),
 	CONSTRAINT ComiteTrack_fk FOREIGN KEY (idTrack) REFERENCES Track(idTrack)
 );
 
 CREATE TABLE CoPresident
 (
 	idChercheur NUMBER NOT NULL,
-	idComite NUMBER NOT NULL,
-	CONSTRAINT copresident_pk PRIMARY KEY (idChercheur, idComite),
+	idComiteRelecture NUMBER NOT NULL,
+	CONSTRAINT copresident_pk PRIMARY KEY (idChercheur, idComiteRelecture),
 	CONSTRAINT chercheur_fk FOREIGN KEY (idChercheur) REFERENCES Chercheur(idChercheur),
-	CONSTRAINT CoPresComiteRelecture_fk FOREIGN KEY (idComite) REFERENCES ComiteRelecture(idComite)
+	CONSTRAINT CoPresComiteRelecture_fk FOREIGN KEY (idComiteRelecture) REFERENCES ComiteRelecture(idComiteRelecture)
 );
 
 CREATE TABLE Sujet
 (
-	idSujet NUMBER NOT NULL,
 	motClef VARCHAR(30) NOT NULL,
 	CONSTRAINT sujet_pk PRIMARY KEY (idSujet)
 );
@@ -89,27 +87,27 @@ CREATE TABLE Sujet
 CREATE TABLE TrackASujet
 (
 	idTrack NUMBER NOT NULL,
-	idSujet NUMBER NOT NULL,
-	CONSTRAINT TrackASujet_pk PRIMARY KEY (idTrack, idSujet),
+	motClef VARCHAR(30) NOT NULL,
+	CONSTRAINT TrackASujet_pk PRIMARY KEY (idTrack, motClef),
 	CONSTRAINT TrackASujetTrack_fk FOREIGN KEY (idTrack) REFERENCES Track(idTrack),
-	CONSTRAINT TrackASujetSujet_fk FOREIGN KEY (idSujet) REFERENCES Sujet(idSujet)
+	CONSTRAINT TrackASujetSujet_fk FOREIGN KEY (motClef) REFERENCES Sujet(motClef)
 );
 
 CREATE TABLE Membre
 (
 	idChercheur NUMBER NOT NULL,
-	idComite NUMBER NOT NULL,
-	CONSTRAINT membre_pk PRIMARY KEY (idChercheur, idComite),
+	idComiteRelecture NUMBER NOT NULL,
+	CONSTRAINT membre_pk PRIMARY KEY (idChercheur, idComiteRelecture),
 	CONSTRAINT membreChercheur_fk FOREIGN KEY (idChercheur) REFERENCES Chercheur(idChercheur),
-	CONSTRAINT membreComite_fk FOREIGN KEY (idComite) REFERENCES ComiteRelecture(idComite)
+	CONSTRAINT membreComite_fk FOREIGN KEY (idComiteRelecture) REFERENCES ComiteRelecture(idComiteRelecture)
 );
 
 CREATE TABLE Soumission
 (
 	noSoumission NUMBER NOT NULL,
-	titre VARCHAR(500) NOT NULL,
-	resume VARCHAR(200) NOT NULL,
-	corps VARCHAR(200) NOT NULL,
+	titre VARCHAR(150) NOT NULL,
+	resume VARCHAR(1500) NOT NULL,
+	corps VARCHAR(8000) NOT NULL,
 	idTrack NUMBER NOT NULL,
 	CONSTRAINT soumission_pk PRIMARY KEY (noSoumission),
 	CONSTRAINT soumissionTrack_fk FOREIGN KEY (idTrack) REFERENCES Track(idTrack)
@@ -117,22 +115,24 @@ CREATE TABLE Soumission
 
 CREATE TABLE Evaluation
 (
+	idComiteRelecture NUMBER NOT NULL,
 	idChercheur NUMBER NOT NULL,
 	noSoumission NUMBER NOT NULL,
-	idComite NUMBER NOT NULL,
 	note  NUMBER NOT NULL,
 	CONSTRAINT evalution_pk PRIMARY KEY (idChercheur, noSoumission, idComite),
 	CONSTRAINT evalChercheur_fk FOREIGN KEY (idChercheur) REFERENCES Chercheur(idChercheur),
 	CONSTRAINT evalSoumission_fk FOREIGN KEY (noSoumission) REFERENCES Soumission(noSoumission),
-	CONSTRAINT evalComiteRelecture_fk FOREIGN KEY (idComite) REFERENCES ComiteRelecture(idComite)
+	CONSTRAINT evalComiteRelecture_fk FOREIGN KEY (idComiteRelecture) REFERENCES ComiteRelecture(idComiteRelecture)
 );
 
 CREATE TABLE AuteurASoumission
 (
 	idChercheur NUMBER NOT NULL,
 	idSoumission NUMBER NOT NULL,
-	rang  NUMBER NOT NULL,
+	rangAuteur NUMBER NOT NULL,
 	CONSTRAINT AuteurASoumission_pk PRIMARY KEY (idChercheur, idSoumission),
 	CONSTRAINT soumissionChercheur_fk FOREIGN KEY (idChercheur) REFERENCES Chercheur(idChercheur),
 	CONSTRAINT soumission_fk FOREIGN KEY (idSoumission) REFERENCES Soumission(noSoumission)
 );
+
+
