@@ -1,11 +1,11 @@
-delete from ComiteRelecture;
 delete from AuteurASoumission;
-delete from Soumission;
 delete from Evaluation;
+delete from Soumission;
 delete from Membre;
 delete from TrackASujet;
 delete from Sujet;
 delete from CoPresident;
+delete from ComiteRelecture;
 delete from Chercheur;
 delete from Track;
 delete from Edition;
@@ -33,6 +33,7 @@ INSERT INTO Track VALUES (5,3,'Graph Mining','Mining complex graphs',2,4);
 INSERT INTO Track VALUES (6,3,'Deep Learning','Classification in the deep',2,4);
 INSERT INTO Track VALUES (7,3,'Graph Mining','Mining heterogeneous networks',2,4);
 INSERT INTO Track VALUES (8,3,'Deep Learning','Classification the very deep',2,4);
+INSERT INTO Track VALUES (9,1,'TEST','TEST',2,4);
 
 
 -- idChercheur,nom,prénom,adresse,courriel
@@ -74,6 +75,7 @@ INSERT INTO ComiteRelecture VALUES (15,5);
 INSERT INTO ComiteRelecture VALUES (16,6);
 INSERT INTO ComiteRelecture VALUES (17,7);
 INSERT INTO ComiteRelecture VALUES (18,8);
+INSERT INTO ComiteRelecture VALUES (19,9);
 
 
 --idComité,idChercheur
@@ -93,6 +95,7 @@ INSERT INTO CoPresident (idComiteRelecture, idChercheur) VALUES (17,7);
 INSERT INTO CoPresident (idComiteRelecture, idChercheur) VALUES (17,10);
 INSERT INTO CoPresident (idComiteRelecture, idChercheur) VALUES (18,8);
 INSERT INTO CoPresident (idComiteRelecture, idChercheur) VALUES (18,9);
+
 
 -- idSujet,motClef
 INSERT INTO Sujet VALUES (21,'homéopathie');
@@ -198,6 +201,7 @@ insert into Soumission values (21,'Analyse de la vérification du modèle et de 
 insert into Soumission values (22,'Abyss : la singularité, une question de couches ?','bla-bla','tiny.url',8);
 insert into Soumission values (23,'L''influence de la théorie aléatoire sur l''ingénierie du logiciel d''autoapprentissage','bla-bla','tiny.url',8);
 insert into Soumission values (24,'Un cas pour la loi de Moore','bla-bla','tiny.url',8);
+insert into Soumission values (25,'test','test','test.url',9);
 
 -- idComité,idChercheur,noSoumission,note
 INSERT INTO Evaluation (idComiteRelecture, idChercheur, noSoumission) VALUES (11,5,1);
@@ -240,25 +244,25 @@ INSERT INTO Evaluation (idComiteRelecture, idChercheur, noSoumission) VALUES (17
 
 
 -- idChercheur;insoumission,rang
-insert into AuteurASoumission values(1,1,1);
+--insert into AuteurASoumission values(1,1,1);
 insert into AuteurASoumission values(3,1,2);
-insert into AuteurASoumission values(2,2,1);
+--insert into AuteurASoumission values(2,2,1);
 insert into AuteurASoumission values(7,2,2);
 insert into AuteurASoumission values(11,2,3);
 insert into AuteurASoumission values(5,3,1);
-insert into AuteurASoumission values(1,3,2);
+--insert into AuteurASoumission values(1,3,2);
 insert into AuteurASoumission values(9,3,3);
 insert into AuteurASoumission values(10,4,1);
 insert into AuteurASoumission values(14,4,2);
 insert into AuteurASoumission values(8,5,1);
-insert into AuteurASoumission values(4,5,2);
+--insert into AuteurASoumission values(4,5,2);
 insert into AuteurASoumission values(6,5,3);
 insert into AuteurASoumission values(12,6,1);
 insert into AuteurASoumission values(10,7,2);
 insert into AuteurASoumission values(14,7,1);
 insert into AuteurASoumission values(15,8,1);
 insert into AuteurASoumission values(16,9,1);
-insert into AuteurASoumission values(2,9,2);
+--insert into AuteurASoumission values(2,9,2);
 insert into AuteurASoumission values(11,9,3);
 insert into AuteurASoumission values(14,10,1);
 insert into AuteurASoumission values(12,10,2);
@@ -287,4 +291,5 @@ insert into AuteurASoumission values(26,23,1);
 insert into AuteurASoumission values(16,24,1);
 insert into AuteurASoumission values(17,24,2);
 insert into AuteurASoumission values(18,24,3);
+insert into AuteurASoumission values(1,25,1);
 
