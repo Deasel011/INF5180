@@ -1,26 +1,29 @@
 /*Affichage des tracks d'un conference*/
-select *
-from Track
-where idEdition = searchValue
+select Track.titre, Track.description
+from Conference
+join Edition on Edition.titre = Conference.titre
+join Track on Track.idEdition = Edition.idEdition
+where Conference.acronyme = unAcronyme ;
 
 /*Affichage des noms des membre de comite de relecture d'un track*/
-select nom
-from Chercheur c
-	inner join Evaluation e on e.idChercheur = c.idChercheur
-	inner join Membre m on m.idChercheur = c.idChercheur
-	inner join ComiteRelecture cr on cr.idComiteRelecture = m.idComiteRelecture
-where cr.idTrack = searchValue
-
+select c.nom
+from ComiteRelecture cr
+ join Membre m on cr.idComiteRelecture = m.idComiteRelecture
+ join Chercheur c on m.idChercheur = c.idChercheur
+where cr.idTrack = unIdTrack ;
 
 /*Affichage du nombre d'article soumis par track pour un conference*/
-select idTrack, count(noSoumission)
-from Track t
-	inner join Soumission s on t.idTrack = s.idTrack
-where t.idEdition = searchValue
-group by idTrack
+select Track.description, count(noSoumission)
+from Conference
+join Edition on Conference.Titre = Edition.Titre
+join Track on Track.idEdition = Edition.idEdition
+join Soumission on Soumission.idTrack = Track.idTrack
+where Conference.acronyme = unAcronyme
+group by Track.description;
+
 
 /*Affichage du nombre moyen d'article affecte a un membre pour un comite donne*/
-select idChercheur, count(noSoumission) / count(idChercheur)
+select avg(count(noSoumission))
 from Evaluation
-where idComiteRelecture = searchValue
-group by idChercheur
+where idComiteRelecture = unIdComiteRelecture
+group by idChercheur;
