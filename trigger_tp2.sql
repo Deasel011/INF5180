@@ -89,140 +89,26 @@ BEGIN
   where aas.idSoumission = :new.noSoumission and aas3.idChercheur = :new.idChercheur;
 
   if (t_count > 0) THEN
-    raise_application_error(-20005,'Conflit d''interet, evaluateur a deja travailler avec un des auteur de cette soumission ');
+    raise_application_error(-20005,'Conflit d''interet, evaluateur a deja travailler avec un des auteur de cette soumission');
   end if;
 end;
 /
 
 create or replace trigger ConflitInteretAuteur
-after insert or update on Evaluation
+before insert or update on AuteurASoumission
 for each row
 declare t_count number;
 BEGIN
   select count(*) into t_count
-  from  AuteurASoumission aas
-  join AuteurASoumission aas2 on aas.idChercheur = aas2.idChercheur
-  join AuteurASoumission aas3 on aas2.idSoumission = aas3.idSoumission
-  where aas.idSoumission = :new.noSoumission and aas3.idChercheur = :new.idChercheur;
+  from  AuteurASoumission aa
+    join Evaluation eval on aa.idSoumission = eval.noSoumission
+    join AuteurASoumission aas on eval.idChercheur = aas.idChercheur
+    join AuteurASoumission aas2 on aas.idChercheur = aas2.idChercheur
+    join AuteurASoumission aas3 on aas2.idSoumission = aas3.idSoumission
+  where aa.idSoumission = :new.idSoumission and aas3.idChercheur = :new.idChercheur;
 
   if (t_count > 0) THEN
-    raise_application_error(-20005,'Conflit d''interet, evaluateur a deja travailler avec un des auteur de cette soumission ');
+    raise_application_error(-20005,'Conflit d''interet, l''evaluateur de la soumission a deja travailler avec l''auteur nouvellement ajoute');
   end if;
 end;
-/
-
--- rendu ici
-
-
-
-
-
-
--- Trigger lance avant insertion et update sur la table CoPresident
-CREATE OR REPLACE TRIGGER CheckConflitCoPresAuteur
-	BEFORE INSERT OR UPDATE ON CoPresident
-		FOR EACH ROW
-
-	DECLARE
-	t_idTrackAuteur INTEGER;
-
-	BEGIN
-			dbms_output.put_line('start CheckConflitCoPresAuteur sur CoPresident idChercheur: ' || :new.idChercheur);
-
-		SELECT count(idChercheur) into t_idTrackAuteur
-		from AuteurASoumission aas
-		inner join soumission s on aas.idsoumission = s.nosoumission
-		WHERE aas.idChercheur = :new.idChercheur 		
-		and s.idTrack = (select idTrack 
-				from Comiterelecture cr 	
-				where cr.idComite = :new.idcomite);
-
-		IF( t_idTrackAuteur > 0 ) THEN
-			dbms_output.put_line(t_idTrackAuteur);
-			RAISE_APPLICATION_ERROR( -20003, 'Un co-president ne peut etre auteur d une soumission dans son propre track');
-		END IF;
-
-	END;
-/
-
--- Trigger lance avant insertion et update sur la table AuteurASoumission
-CREATE OR REPLACE TRIGGER CheckConflitAuteurCoPres
-	BEFORE INSERT OR UPDATE ON AuteurASoumission
-	FOR EACH ROW
-
-	DECLARE
-	t_idTrackAuteur INTEGER;
-
-	BEGIN
-
-		SELECT COUNT(idChercheur) INTO t_idTrackAuteur
-		FROM CoPresident cp
-		INNER JOIN comiterelecture cr
-		ON cp.idcomite = cr.idcomite
-		WHERE idChercheur = :new.idChercheur
-		AND cr.idTrack = (select idtrack from soumission where nosoumission = :new.idsoumission);
-
-			IF( t_idTrackAuteur > 0 ) THEN
-
-				RAISE_APPLICATION_ERROR( -20004, 'Un co-president ne peut etre auteur d une soumission dans son propre track');
-			END IF;
-
-	END;
-/
-
-
-
--- Trigger lance avant insertion et update sur la table Evaluation
-CREATE OR REPLACE TRIGGER PasDeConflitDinteret
-	BEFORE INSERT OR UPDATE ON Evaluation
-	FOR EACH ROW
-
-	DECLARE
-	t_count INTEGER;
-
-	BEGIN
-		dbms_output.put_line('start trigger PasDeConflitDinteret idchercheur' || :new.idchercheur);
-
-		for i in (select distinct aas.idChercheur from AuteurASoumission aas
-                         inner join soumission s on s.nosoumission = aas.idsoumission
-                         where aas.idChercheur <> :new.idChercheur
-                         and aas.idsoumission in
-                                 (select idsoumission
-                                  from auteurasoumission
-                                  where idchercheur = :new.idchercheur)) loop
-                 dbms_output.put_line('idChercheur: ' || i.idChercheur);
-                 select count(*) into t_count
-                 from AuteurASoumission aas
-                 where  aas.idSoumission = :new.noSoumission
-                 and aas.idchercheur = i.idchercheur;
-		dbms_output.put_line('countr: ' || t_count);
-			if t_count > 0 then
-				RAISE_APPLICATION_ERROR( -20005, 'Un evaluateur ne peut evaluer la soumission d un co-auteur');
-			end if;
-		end loop;
-	END;
-/
-
- Trigger lance avant insertion et update sur la table AuteurASoumission
-CREATE OR REPLACE TRIGGER PasDeConflitDinteretAAS
-	BEFORE INSERT OR UPDATE ON AuteurASoumission
-	FOR EACH ROW
-	
-	DECLARE
-	t_count integer;
-
-	BEGIN
-		for i in (select idchercheur from AuteurASoumission where idchercheur in
-	 			(select idchercheur from AuteurASoumission where idSoumission in
-	 				(select idSoumission from AuteurASoumission where idchercheur = :new.idchercheur))) loop
-		 	select count(idChercheur) into t_count 
-			from Evaluation 
-			where idChercheur = i.idchercheur 
-			and nosoumission = :new.idsoumission;
-
-			if t_count > 0 then
-				RAISE_APPLICATION_ERROR( -20006, 'Un evaluateur ne peut evaluer la soumission d un co-auteur');
-			end if;
-		end loop;
-	END;
 /

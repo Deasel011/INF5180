@@ -263,7 +263,7 @@ insert into AuteurASoumission values(14,7,1);
 insert into AuteurASoumission values(15,8,1);
 insert into AuteurASoumission values(16,9,1);
 --insert into AuteurASoumission values(2,9,2);
-insert into AuteurASoumission values(11,9,3);
+--insert into AuteurASoumission values(11,9,3);
 insert into AuteurASoumission values(14,10,1);
 insert into AuteurASoumission values(12,10,2);
 insert into AuteurASoumission values(16,11,1);

@@ -35,3 +35,7 @@ Select 1 from AuteurASoumission where idSoumission = 25;
 
 -- Test de conflit d'interet a partir de l'evaluation
 insert into Evaluation (idComiteRelecture, idChercheur, noSoumission) values (13,16,24);
+-- DOIT LANCER UNE EXCEPTION
+
+-- Test de conflit d'interet a partir de l'auteur soumission
+insert into AuteurASoumission values(3,5,4);
